@@ -1,16 +1,17 @@
 # - Find libxml2
 # Find the native LIBXML2 includes and library
 #
-#  LIBXML2_INCLUDE_DIRS - where to find libxml2/libxml, etc.
+#  LIBXML2_INCLUDE_DIRS - where to find libxml, etc.
 #  LIBXML2_LIBRARIES    - List of libraries when using libxml2.
 #  LIBXML2_FOUND        - True if libxml2 found.
 
 IF (LIBXML2_INCLUDE_DIRS)
   # Already in cache, be silent
-  SET(LIBUUID_FIND_QUIETLY TRUE)
+  SET(LIBXML2_FIND_QUIETLY TRUE)
 ENDIF (LIBXML2_INCLUDE_DIRS)
 
-FIND_PATH(LIBXML2_INCLUDE_DIRS libxml2/libxml)
+FIND_PATH(LIBXML2_INCLUDE_DIRS libxml)
+message("@ LIBXML2_INCLUDE_DIRS: ${LIBXML2_INCLUDE_DIRS}")
 
 SET(LIBXML2_NAMES libxml2)
 FIND_LIBRARY(LIBXML2_LIBRARIES NAMES ${LIBXML2_NAMES})
