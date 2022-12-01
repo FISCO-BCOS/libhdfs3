@@ -9,11 +9,16 @@ ENDIF()
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 SET(DOXYFILE_PATH ${CMAKE_SOURCE_DIR}/docs)
 
+if (NOT DEFINED URL_BASE)
+    set(URL_BASE "github.com")
+endif()
+
 include(HunterGate)
 # TODO: replace with vcpkg
 HunterGate(
-        URL "https://${URL_BASE}/FISCO-BCOS/hunter/archive/7e7506db44502c14d9461d6b0e428fc29c5c66f6.tar.gz"
-        SHA1 "fe43ce58853fa09c37c21fb073582e8fbb735b12"
+        URL "https://${URL_BASE}/FISCO-BCOS/hunter/archive/6f5b62b2f3a063146ba9e99039449c9f966c465b.tar.gz"
+        SHA1 "ba678314e36f4761c94206f873960d7e91d2f88f"
+        FILEPATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake/config.cmake"
 )
 
 PROJECT(libhdfs3 VERSION "3.0.0")
@@ -22,28 +27,22 @@ if (NOT DEFINED WITH_HUNTER_PKG)
 	set(WITH_HUNTER_PKG OFF)
 endif()
 
-if(WITH_HUNTER_PKG)
-  hunter_add_package(libxml2)
-  hunter_add_package(Protobuf)
-  hunter_add_package(uuid)
-  set(CMAKE_PREFIX_PATH ${HUNTER_INSTALL_PREFIX})
-  # prefer to use hunter library
-  set(CMAKE_LIBRARY_PATH ${HUNTER_INSTALL_PREFIX}/lib)
-  message("@ CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
-endif()
+hunter_add_package(libxml2)
+find_package(libxml2 CONFIG REQUIRED)
+
+hunter_add_package(Protobuf)
+find_package(Protobuf CONFIG REQUIRED)
+
+hunter_add_package(uuid)
+find_package(uuid CONFIG REQUIRED)
 
 INCLUDE(Platform)
 INCLUDE(Functions)
 INCLUDE(Options)
 
-FIND_PACKAGE(LibXml2 REQUIRED)
 FIND_PACKAGE(Protobuf REQUIRED)
 FIND_PACKAGE(KERBEROS REQUIRED)
 FIND_PACKAGE(GSasl REQUIRED)
-
-IF(OS_LINUX)
-    FIND_PACKAGE(LibUUID REQUIRED)
-ENDIF(OS_LINUX)
 
 ADD_SUBDIRECTORY(mock)
 ADD_SUBDIRECTORY(src)
@@ -77,5 +76,10 @@ install(
     INCLUDES DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}"
 )
 # install the include files for hash
-INSTALL(FILES ${HEADER} DESTINATION include/hdfs)
+set(DESTINATION_INCLUDE_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
 
+install(
+        DIRECTORY "hdfs"
+        DESTINATION "${DESTINATION_INCLUDE_DIR}"
+        FILES_MATCHING PATTERN "*.h"
+)
