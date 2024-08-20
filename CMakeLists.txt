@@ -26,8 +26,10 @@ find_package(libxml2 REQUIRED)
 
 find_package(protobuf REQUIRED)
 
-find_package(libuuid REQUIRED)
-set(LIBUUID_LIBRARIES unofficial::UUID::uuid)
+if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+	find_package(unofficial-libuuid REQUIRED)
+	set(LIBUUID_LIBRARIES unofficial::UUID::uuid)
+endif()
 
 INCLUDE(Platform)
 INCLUDE(Functions)
