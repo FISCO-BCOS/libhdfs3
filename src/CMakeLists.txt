@@ -95,8 +95,8 @@ IF(NEED_GCCEH)
 ENDIF(NEED_GCCEH)
 
 IF(OS_LINUX)
-    TARGET_LINK_LIBRARIES(libhdfs3-static PkgConfig::uuid)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared PkgConfig::uuid)
+    TARGET_LINK_LIBRARIES(libhdfs3-static unofficial::UUID::uuid)
+    TARGET_LINK_LIBRARIES(libhdfs3-shared unofficial::UUID::uuid)
 ENDIF(OS_LINUX)
 
 INCLUDE_DIRECTORIES(${libhdfs3_ROOT_SOURCES_DIR})
@@ -111,7 +111,7 @@ INCLUDE_DIRECTORIES(${GSASL_INCLUDE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/mock)
 
 TARGET_LINK_LIBRARIES(libhdfs3-static PRIVATE protobuf::libprotobuf)
-TARGET_LINK_LIBRARIES(libhdfs3-static libxml2::libxml2)
+TARGET_LINK_LIBRARIES(libhdfs3-static LibXml2::LibXml2)
 
 IF (WITH_KERBEROS)
 TARGET_LINK_LIBRARIES(libhdfs3-static ${KERBEROS_LIBRARIES})
@@ -124,7 +124,7 @@ TARGET_LINK_LIBRARIES(libhdfs3-static ${GSASL_STATIC_LIBRARIES})
 ENDIF()
 
 TARGET_LINK_LIBRARIES(libhdfs3-shared protobuf::libprotobuf)
-TARGET_LINK_LIBRARIES(libhdfs3-shared libxml2::libxml2)
+TARGET_LINK_LIBRARIES(libhdfs3-shared LibXml2::LibXml2)
 
 IF (WITH_KERBEROS)
 TARGET_LINK_LIBRARIES(libhdfs3-shared ${KERBEROS_LIBRARIES})

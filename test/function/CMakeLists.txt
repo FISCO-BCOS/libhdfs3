@@ -57,11 +57,11 @@ IF(NEED_GCCEH)
 ENDIF(NEED_GCCEH)
 
 IF(OS_LINUX)
-    TARGET_LINK_LIBRARIES(function PkgConfig::uuid)
+    TARGET_LINK_LIBRARIES(function unofficial::UUID::uuid)
 ENDIF(OS_LINUX)
 
 TARGET_LINK_LIBRARIES(function protobuf::libprotobuf)
-TARGET_LINK_LIBRARIES(function libxml2::libxml2)
+TARGET_LINK_LIBRARIES(function LibXml2::LibXml2)
 
 IF (WITH_KERBEROS)
 TARGET_LINK_LIBRARIES(function ${KERBEROS_LIBRARIES})
