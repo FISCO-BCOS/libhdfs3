@@ -13,28 +13,21 @@ if (NOT DEFINED URL_BASE)
     set(URL_BASE "github.com")
 endif()
 
-include(HunterGate)
-# TODO: replace with vcpkg
-HunterGate(
-        URL "https://${URL_BASE}/FISCO-BCOS/hunter/archive/6f5b62b2f3a063146ba9e99039449c9f966c465b.tar.gz"
-        SHA1 "ba678314e36f4761c94206f873960d7e91d2f88f"
-        FILEPATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake/config.cmake"
-)
+# vcpkg init
+if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    find_package(Git REQUIRED)
+    execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
+endif()
 
 PROJECT(libhdfs3 VERSION "3.0.0")
 
-if (NOT DEFINED WITH_HUNTER_PKG)
-	set(WITH_HUNTER_PKG OFF)
-endif()
+find_package(libxml2 REQUIRED)
 
-hunter_add_package(libxml2)
-find_package(libxml2 CONFIG REQUIRED)
+find_package(protobuf REQUIRED)
 
-hunter_add_package(Protobuf)
-find_package(Protobuf CONFIG REQUIRED)
-
-hunter_add_package(uuid)
-find_package(uuid CONFIG REQUIRED)
+find_package(libuuid REQUIRED)
+set(LIBUUID_LIBRARIES unofficial::UUID::uuid)
 
 INCLUDE(Platform)
 INCLUDE(Functions)
