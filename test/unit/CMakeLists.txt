@@ -51,6 +51,6 @@ IF(OS_LINUX)
     TARGET_LINK_LIBRARIES(unit unofficial::UUID::uuid)
 ENDIF(OS_LINUX)
 
-TARGET_LINK_LIBRARIES(unit protobuf::libprotobuf 
-    LibXml2::LibXml2 ${KERBEROS_LIBRARIES} ${GSASL_LIBRARIES})
+TARGET_LINK_LIBRARIES(unit ${GSASL_LIBRARIES} ${KERBEROS_LIBRARIES} protobuf::libprotobuf 
+    LibXml2::LibXml2 resolv)
 SET(unit_SOURCES ${unit_SOURCES} PARENT_SCOPE)

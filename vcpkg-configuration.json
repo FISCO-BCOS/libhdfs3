@@ -2,7 +2,7 @@
     "registries": [
       {
         "kind": "git",
-        "repository": "http://mirror.ghproxy.com/github.com/FISCO-BCOS/registry",
+        "repository": "http://github.com/FISCO-BCOS/registry",
         "baseline": "c89bb5b08e17fc715c130eab80d410bfefb99ed4",
         "packages": [
           "krb5",

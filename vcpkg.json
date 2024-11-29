@@ -22,7 +22,11 @@
       "name": "libuuid",
       "platform": "!windows & !osx"
     },
-    "libxml2",
+    {
+      "name": "libxml2",
+      "version>=": "2.11.5#1",
+      "features": ["lzma", "zlib"]
+    },
     "protobuf",
     "gsasl",
     "krb5"

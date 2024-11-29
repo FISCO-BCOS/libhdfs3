@@ -57,7 +57,7 @@ IF(OS_LINUX)
 	TARGET_LINK_LIBRARIES(secure unofficial::UUID::uuid)
 ENDIF(OS_LINUX)
 
-TARGET_LINK_LIBRARIES(secure protobuf::libprotobuf LibXml2::LibXml2 ${KERBEROS_LIBRARIES} ${GSASL_LIBRARIES})
+TARGET_LINK_LIBRARIES(secure ${GSASL_LIBRARIES} ${KERBEROS_LIBRARIES} protobuf::libprotobuf LibXml2::LibXml2 resolv)
 
 SET(secure_SOURCES ${secure_SOURCES} PARENT_SCOPE)
 

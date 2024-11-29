@@ -56,7 +56,7 @@ ENDIF(NEED_GCCEH)
 IF(OS_LINUX)
     TARGET_LINK_LIBRARIES(function unofficial::UUID::uuid)
 ENDIF(OS_LINUX)
-TARGET_LINK_LIBRARIES(function protobuf::libprotobuf LibXml2::LibXml2 ${KERBEROS_LIBRARIES} ${GSASL_LIBRARIES})
+TARGET_LINK_LIBRARIES(function ${GSASL_LIBRARIES} ${KERBEROS_LIBRARIES} protobuf::libprotobuf LibXml2::LibXml2 resolv)
 
 SET(function_SOURCES ${function_SOURCES} PARENT_SCOPE)
 

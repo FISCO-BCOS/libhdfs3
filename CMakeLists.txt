@@ -18,6 +18,7 @@ endif()
 
 PROJECT(libhdfs3 VERSION "3.0.0")
 
+set(HDFS3_TARGET libhdfs3)
 INCLUDE(Platform)
 INCLUDE(Functions)
 INCLUDE(Options)
@@ -30,7 +31,6 @@ endif()
 
 include(FindGsasl)
 include (FindKrb5)
-find_package(Boost COMPONENTS atomic chrono iostreams thread system)
 
 ADD_SUBDIRECTORY(mock)
 ADD_SUBDIRECTORY(src)
