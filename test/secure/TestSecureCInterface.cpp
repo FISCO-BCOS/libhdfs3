@@ -25,8 +25,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#if WITH_KERBEROS
 #include "gtest/gtest.h"
 
 #include "client/hdfs.h"
@@ -182,4 +180,3 @@ TEST_F(TestKerberosConnectC, DelegationToken) {
     ASSERT_EQ(EPERM, errno);
     hdfsFreeDelegationToken(token);
 }
-#endif

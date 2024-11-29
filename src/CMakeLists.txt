@@ -72,22 +72,8 @@ ADD_CUSTOM_COMMAND(
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
-TARGET_LINK_LIBRARIES(libhdfs3-static pthread)
-TARGET_LINK_LIBRARIES(libhdfs3-shared pthread)
-       
-IF(NEED_BOOST)
-    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_thread)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_chrono)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_system)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_atomic)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_iostreams)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_thread)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_chrono)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_system)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_atomic)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_iostreams)
-ENDIF(NEED_BOOST)
+TARGET_LINK_LIBRARIES(libhdfs3-static pthread Boost::thread Boost::chrono Boost::system Boost::iostreams Boost::thread)
+TARGET_LINK_LIBRARIES(libhdfs3-shared pthread Boost::thread Boost::chrono Boost::system Boost::iostreams Boost::thread)
 
 IF(NEED_GCCEH)
     TARGET_LINK_LIBRARIES(libhdfs3-static gcc_eh)
@@ -102,42 +88,17 @@ ENDIF(OS_LINUX)
 INCLUDE_DIRECTORIES(${libhdfs3_ROOT_SOURCES_DIR})
 INCLUDE_DIRECTORIES(${libhdfs3_COMMON_SOURCES_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-
-IF (WITH_KERBEROS)
 INCLUDE_DIRECTORIES(${KERBEROS_INCLUDE_DIRS})
-ENDIF()
 
-INCLUDE_DIRECTORIES(${GSASL_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${GSASL_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/mock)
 
-TARGET_LINK_LIBRARIES(libhdfs3-static PRIVATE protobuf::libprotobuf)
-TARGET_LINK_LIBRARIES(libhdfs3-static LibXml2::LibXml2)
+TARGET_LINK_LIBRARIES(libhdfs3-static PRIVATE protobuf::libprotobuf LibXml2::LibXml2  ${GSASL_LIBRARIES} ${KERBEROS_LIBRARIES})
 
-IF (WITH_KERBEROS)
-TARGET_LINK_LIBRARIES(libhdfs3-static ${KERBEROS_LIBRARIES})
-ENDIF()
-
-IF (APPLE)
-TARGET_LINK_LIBRARIES(libhdfs3-static ${GSASL_LIBRARIES})
-ELSE()
-TARGET_LINK_LIBRARIES(libhdfs3-static ${GSASL_STATIC_LIBRARIES})
-ENDIF()
-
-TARGET_LINK_LIBRARIES(libhdfs3-shared protobuf::libprotobuf)
-TARGET_LINK_LIBRARIES(libhdfs3-shared LibXml2::LibXml2)
-
-IF (WITH_KERBEROS)
-TARGET_LINK_LIBRARIES(libhdfs3-shared ${KERBEROS_LIBRARIES})
-ENDIF()
-
-TARGET_LINK_LIBRARIES(libhdfs3-shared ${GSASL_LIBRARIES})
+TARGET_LINK_LIBRARIES(libhdfs3-shared protobuf::libprotobuf LibXml2::LibXml2 ${GSASL_LIBRARIES} ${KERBEROS_LIBRARIES})
 
 SET_TARGET_PROPERTIES(libhdfs3-static PROPERTIES OUTPUT_NAME "hdfs3")
 SET_TARGET_PROPERTIES(libhdfs3-shared PROPERTIES OUTPUT_NAME "hdfs3")
-
-IF(NEED_BOOST)
-    SET_TARGET_PROPERTIES(libhdfs3-shared libhdfs3-static PROPERTIES LINK_FLAGS "-L${Boost_LIBRARY_DIRS}")
-ENDIF(NEED_BOOST)
 
 SET_TARGET_PROPERTIES(libhdfs3-shared PROPERTIES 
     VERSION ${libhdfs3_VERSION_MAJOR}.${libhdfs3_VERSION_MINOR}.${libhdfs3_VERSION_PATCH} 

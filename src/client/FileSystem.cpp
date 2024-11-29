@@ -40,9 +40,7 @@
 
 #include <algorithm>
 #include <string>
-#if WITH_KERBEROS
 #include <krb5/krb5.h>
-#endif
 
 using namespace Hdfs::Internal;
 
@@ -52,7 +50,6 @@ namespace Internal {
 
 static std::string ExtractPrincipalFromTicketCache(
     const std::string & cachePath) {
-#if WITH_KERBEROS
     krb5_context cxt = NULL;
     krb5_ccache ccache = NULL;
     krb5_principal principal = NULL;
@@ -117,9 +114,6 @@ static std::string ExtractPrincipalFromTicketCache(
     }
 
     return retval;
-#else
-    THROW(HdfsIOException, "libhdfs3 built without kerberos support");
-#endif
 }
 
 

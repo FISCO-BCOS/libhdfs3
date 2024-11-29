@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.10)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.14)
 
 SET(CMAKE_VERBOSE_MAKEFILE ON CACHE STRING "Verbose build." FORCE)
 
@@ -9,10 +9,6 @@ ENDIF()
 SET(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake" ${CMAKE_MODULE_PATH})
 SET(DOXYFILE_PATH ${CMAKE_SOURCE_DIR}/docs)
 
-if (NOT DEFINED URL_BASE)
-    set(URL_BASE "github.com")
-endif()
-
 # vcpkg init
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     find_package(Git REQUIRED)
@@ -22,24 +18,19 @@ endif()
 
 PROJECT(libhdfs3 VERSION "3.0.0")
 
-find_package(libxml2 REQUIRED)
-
-find_package(protobuf REQUIRED)
-
-if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
-	find_package(unofficial-libuuid REQUIRED)
-	set(LIBUUID_LIBRARIES unofficial::UUID::uuid)
-endif()
-
 INCLUDE(Platform)
 INCLUDE(Functions)
 INCLUDE(Options)
 
-IF (WITH_KERBEROS)
-    FIND_PACKAGE(KERBEROS REQUIRED)
-ENDIF()
+find_package(libxml2 REQUIRED)
+find_package(protobuf REQUIRED)
+if ("${CMAKE_SYSTEM_NAME}" MATCHES "Linux")
+    find_package(unofficial-libuuid REQUIRED)
+endif()
 
-FIND_PACKAGE(GSasl REQUIRED)
+include(FindGsasl)
+include (FindKrb5)
+find_package(Boost COMPONENTS atomic chrono iostreams thread system)
 
 ADD_SUBDIRECTORY(mock)
 ADD_SUBDIRECTORY(src)

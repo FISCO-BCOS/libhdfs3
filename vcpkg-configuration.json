@@ -2,10 +2,11 @@
     "registries": [
       {
         "kind": "git",
-        "repository": "https://github.com/cyjseagull/registry",
-        "baseline": "9b4eeeee6db62a5111786c1ba0bb54300f891337",
+        "repository": "http://mirror.ghproxy.com/github.com/FISCO-BCOS/registry",
+        "baseline": "c89bb5b08e17fc715c130eab80d410bfefb99ed4",
         "packages": [
-          "krb5"
+          "krb5",
+          "gsasl"
         ]
       }
     ]
