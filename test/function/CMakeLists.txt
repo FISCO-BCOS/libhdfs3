@@ -36,27 +36,7 @@ ADD_EXECUTABLE(function EXCLUDE_FROM_ALL
     ${libhdfs3_PROTO_HEADERS}
     ${function_SOURCES}
 )
-
-TARGET_LINK_LIBRARIES(function pthread)
-
-IF(NEED_BOOST)
-    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -L${Boost_LIBRARY_DIRS}")
-    TARGET_LINK_LIBRARIES(function boost_thread)
-    TARGET_LINK_LIBRARIES(function boost_chrono)
-    TARGET_LINK_LIBRARIES(function boost_system)
-    TARGET_LINK_LIBRARIES(function boost_atomic)
-    TARGET_LINK_LIBRARIES(function boost_iostreams)
-ENDIF(NEED_BOOST)
-
-IF(NEED_GCCEH)
-    TARGET_LINK_LIBRARIES(function gcc_eh)
-ENDIF(NEED_GCCEH)
-
-IF(OS_LINUX)
-    TARGET_LINK_LIBRARIES(function unofficial::UUID::uuid)
-ENDIF(OS_LINUX)
-TARGET_LINK_LIBRARIES(function ${GSASL_LIBRARIES} ${KERBEROS_LIBRARIES} protobuf::libprotobuf LibXml2::LibXml2 resolv)
+TARGET_LINK_LIBRARIES(function ${HDFS3_TARGET})
 
 SET(function_SOURCES ${function_SOURCES} PARENT_SCOPE)
 
