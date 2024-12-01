@@ -1,6 +1,7 @@
 OPTION(ENABLE_COVERAGE "enable code coverage" OFF)
 OPTION(ENABLE_DEBUG "enable debug build" OFF)
 OPTION(ENABLE_SSE "enable SSE4.2 buildin function" ON)
+OPTION(BUILD_STATIC "build static library" ON)
 OPTION(ENABLE_FRAME_POINTER "enable frame pointer on 64bit system with flag -fno-omit-frame-pointer, on 32bit system, it is always enabled" ON)
 OPTION(ENABLE_LIBCPP "using libc++ instead of libstdc++, only valid for clang compiler" OFF)
 OPTION(ENABLE_BOOST "using boost instead of native compiler c++0x support" OFF)
@@ -167,8 +168,3 @@ TRY_COMPILE(HAVE_STD_ATOMIC
     ${CMAKE_BINARY_DIR}/test.cpp 
     CMAKE_FLAGS "-DCMAKE_CXX_LINK_EXECUTABLE='echo not linking now...'"
     OUTPUT_VARIABLE OUTPUT)
-
-if (NOT DEFINED WITH_KERBEROS)
-    SET(WITH_KERBEROS false)
-    MESSAGE(STATUS "libhdfs3 will be build without kerberos support")
-endif()

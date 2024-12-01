@@ -62,90 +62,43 @@ SET(HEADER
     common/Exception.h
     common/XmlConfig.h)
 
-ADD_LIBRARY(libhdfs3-static STATIC ${libhdfs3_SOURCES} ${libhdfs3_PROTO_SOURCES} ${PROTO_SRCS})
-ADD_LIBRARY(libhdfs3-shared SHARED ${libhdfs3_SOURCES} ${libhdfs3_PROTO_SOURCES} ${PROTO_SRCS})
-
+ADD_LIBRARY(${HDFS3_TARGET} ${libhdfs3_SOURCES} ${libhdfs3_PROTO_SOURCES} ${PROTO_SRCS})
 ADD_CUSTOM_COMMAND(
-    TARGET libhdfs3-shared libhdfs3-static
+    TARGET ${HDFS3_TARGET}
     PRE_BUILD
     COMMAND echo ${libhdfs3_VERSION_STRING} > version
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 )
 
-TARGET_LINK_LIBRARIES(libhdfs3-static pthread)
-TARGET_LINK_LIBRARIES(libhdfs3-shared pthread)
-       
-IF(NEED_BOOST)
-    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_thread)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_chrono)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_system)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_atomic)
-    TARGET_LINK_LIBRARIES(libhdfs3-static boost_iostreams)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_thread)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_chrono)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_system)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_atomic)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared boost_iostreams)
-ENDIF(NEED_BOOST)
+if(NEED_BOOST)
+find_package(Boost COMPONENTS atomic chrono iostreams thread system)
+TARGET_LINK_LIBRARIES(${HDFS3_TARGET} PUBLIC pthread Boost::thread Boost::chrono Boost::system Boost::iostreams Boost::thread)
+endif()
 
 IF(NEED_GCCEH)
-    TARGET_LINK_LIBRARIES(libhdfs3-static gcc_eh)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared gcc_eh)
+    TARGET_LINK_LIBRARIES(${HDFS3_TARGET} PUBLIC gcc_eh)
 ENDIF(NEED_GCCEH)
 
 IF(OS_LINUX)
-    TARGET_LINK_LIBRARIES(libhdfs3-static unofficial::UUID::uuid)
-    TARGET_LINK_LIBRARIES(libhdfs3-shared unofficial::UUID::uuid)
+    TARGET_LINK_LIBRARIES(${HDFS3_TARGET} PUBLIC unofficial::UUID::uuid)
 ENDIF(OS_LINUX)
 
 INCLUDE_DIRECTORIES(${libhdfs3_ROOT_SOURCES_DIR})
 INCLUDE_DIRECTORIES(${libhdfs3_COMMON_SOURCES_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
-
-IF (WITH_KERBEROS)
 INCLUDE_DIRECTORIES(${KERBEROS_INCLUDE_DIRS})
-ENDIF()
 
-INCLUDE_DIRECTORIES(${GSASL_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${GSASL_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/mock)
 
-TARGET_LINK_LIBRARIES(libhdfs3-static PRIVATE protobuf::libprotobuf)
-TARGET_LINK_LIBRARIES(libhdfs3-static LibXml2::LibXml2)
+# Note: pthread maybe conflict with libc when build static library, so should put it into the first place when linking
+TARGET_LINK_LIBRARIES(${HDFS3_TARGET} PUBLIC pthread ${GSASL_LIBRARIES} ${KERBEROS_LIBRARIES} protobuf::libprotobuf LibXml2::LibXml2 resolv)
 
-IF (WITH_KERBEROS)
-TARGET_LINK_LIBRARIES(libhdfs3-static ${KERBEROS_LIBRARIES})
-ENDIF()
-
-IF (APPLE)
-TARGET_LINK_LIBRARIES(libhdfs3-static ${GSASL_LIBRARIES})
-ELSE()
-TARGET_LINK_LIBRARIES(libhdfs3-static ${GSASL_STATIC_LIBRARIES})
-ENDIF()
-
-TARGET_LINK_LIBRARIES(libhdfs3-shared protobuf::libprotobuf)
-TARGET_LINK_LIBRARIES(libhdfs3-shared LibXml2::LibXml2)
-
-IF (WITH_KERBEROS)
-TARGET_LINK_LIBRARIES(libhdfs3-shared ${KERBEROS_LIBRARIES})
-ENDIF()
-
-TARGET_LINK_LIBRARIES(libhdfs3-shared ${GSASL_LIBRARIES})
-
-SET_TARGET_PROPERTIES(libhdfs3-static PROPERTIES OUTPUT_NAME "hdfs3")
-SET_TARGET_PROPERTIES(libhdfs3-shared PROPERTIES OUTPUT_NAME "hdfs3")
-
-IF(NEED_BOOST)
-    SET_TARGET_PROPERTIES(libhdfs3-shared libhdfs3-static PROPERTIES LINK_FLAGS "-L${Boost_LIBRARY_DIRS}")
-ENDIF(NEED_BOOST)
-
-SET_TARGET_PROPERTIES(libhdfs3-shared PROPERTIES 
-    VERSION ${libhdfs3_VERSION_MAJOR}.${libhdfs3_VERSION_MINOR}.${libhdfs3_VERSION_PATCH} 
-    SOVERSION ${libhdfs3_VERSION_API})
+SET_TARGET_PROPERTIES(${HDFS3_TARGET} PROPERTIES OUTPUT_NAME "hdfs3")
 
 include(InstallConfig)
 install(
-    TARGETS libhdfs3-static libhdfs3-shared
+    TARGETS ${HDFS3_TARGET}
     EXPORT "${TARGETS_EXPORT_NAME}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
