@@ -8,6 +8,9 @@
 find_path(KERBEROS_INCLUDE_DIRS krb5.h PATHS "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/include" NO_DEFAULT_PATH)
 
 set(LIB_DIR "${_VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+# libgssapi_krb5
+find_library(Gssapi_krb5_LIB_PATH NAMES gssapi_krb5 PATHS "${LIB_DIR}" NO_DEFAULT_PATH)
+message("*** Gssapi_krb5_LIB_PATH: ${Gssapi_krb5_LIB_PATH} **")
 # libkrb5_otp
 find_library(Krb5_otp_LIB_PATH NAMES krb5_otp PATHS "${LIB_DIR}" NO_DEFAULT_PATH)
 message("*** Krb5_otp_LIB_PATH: ${Krb5_otp_LIB_PATH} **")
@@ -30,7 +33,8 @@ find_library(Com_err_LIB_PATH NAMES com_err PATHS "${LIB_DIR}" NO_DEFAULT_PATH)
 message("*** Com_err_LIB_PATH: ${Com_err_LIB_PATH} **")
 
 # Note: Must notice the library link orders
-set(KERBEROS_LIBRARIES ${Krb5_LIB_PATH} 
+set(KERBEROS_LIBRARIES ${Gssapi_krb5_LIB_PATH} 
+    ${Krb5_LIB_PATH} 
     ${Com_err_LIB_PATH} ${Krb5_otp_LIB_PATH}
     ${Krb5_k5tls_LIB_PATH}  ${K5crypto_LIB_PATH} 
     ${Krb5support_LIB_PATH})
