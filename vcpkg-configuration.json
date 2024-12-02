@@ -3,7 +3,7 @@
       {
         "kind": "git",
         "repository": "http://github.com/FISCO-BCOS/registry",
-        "baseline": "c89bb5b08e17fc715c130eab80d410bfefb99ed4",
+        "baseline": "43992dfad42dd4d8d2237402a75d48eb1ff8d34f",
         "packages": [
           "krb5",
           "gsasl"
